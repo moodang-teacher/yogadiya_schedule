@@ -8,6 +8,7 @@
 
 body {
 	background-color: #faa9ac;
+	word-break: keep-all;
 }
 
 table {
@@ -49,7 +50,7 @@ tr:nth-child(even) .time-column {
 
 .class-cell {
 	background-color: white;
-	font-size: 1.2em;
+	font-size: clamp(15px, 1.2vw, 1.15em);
 	font-weight: 500;
 }
 
