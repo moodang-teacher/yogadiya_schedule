@@ -1,435 +1,570 @@
 <!DOCTYPE html>
 <html lang="ko">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>요가 스튜디오 시간표</title>
-        <link
-            rel="stylesheet"
-            type="text/css"
-            href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
-        />
-        <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-        <style>
-            * {
-                font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue',
-                    'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
-            }
 
-            table {
-                width: 100%;
-                border-collapse: separate;
-                border-spacing: 0;
-                background-color: #943a3a;
-                color: white;
-            }
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>요가 스튜디오 시간표</title>
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <style>
+        * {
+            font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue',
+                'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+        }
 
-            th,
-            td {
-                border: 1px solid #ffffff33;
-                padding: 12px;
-                text-align: center;
-                position: relative;
-            }
+        body {
+            background-color: #faa9ac;
+        }
 
-            th {
-                background-color: #222;
-                font-weight: 600;
-                font-size: 1em;
-            }
+        table {
+            width: 100%;
+            border-collapse: separate;
+            table-layout: fixed;
+            border-spacing: 1px;
+            color: white;
+        }
 
-            td {
-                height: 40px;
-            }
+        th,
+        td {
+            padding: 7px 5px;
+            text-align: center;
+            position: relative;
+        }
 
-            .time-column {
-                background-color: #6b2929;
-                color: white;
-                width: 150px;
-                font-weight: 500;
-                font-size: 0.95em;
-            }
+        th {
+            background-color: #751d23;
+            font-weight: 600;
+            font-size: 1em;
+            padding: 10px;
+        }
 
-            .class-cell {
-                background-color: white;
-                color: black;
-                border: 1px solid #ddd;
-                box-shadow: 0 0 0 1px #f5f5f5;
-                font-size: 0.95em;
-                font-weight: 500;
-            }
+        td {
+            height: 40px;
+        }
 
-            .flying-lv0 {
-                background-color: #f0e6ff;
-            }
-            .flying-lv05 {
-                background-color: #e6f0ff;
-            }
-            .flying-lv05-easy {
-                background-color: #e6f9ff;
-            }
-            .flying-lv07 {
-                background-color: #f2e6ff;
-            }
-            .flying-lv1 {
-                background-color: #fff0e6;
-            }
-            .low-flying {
-                background-color: #f5e6d3;
-            }
-            .kids-flying {
-                background-color: #ffe6f3;
-            }
-            .therapy {
-                background-color: #e6ffe6;
-            }
-            .inside-flow {
-                background-color: #e6f3ff;
-            }
-            .healing {
-                background-color: #e6fff7;
-            }
-            .personal {
-                background-color: #f7e6ff;
-            }
-            .instructor {
-                background-color: #fff7e6;
-            }
+        .time-column {
+            background-color: #6f2328;
+            color: white;
+            font-weight: 500;
+            font-size: 1em;
+        }
 
-            .empty-cell {
-                background-color: #fff;
-            }
+        tr:nth-child(even) .time-column {
+            background-color: #691218;
+        }
 
-            .modal {
-                display: none;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-color: rgba(0, 0, 0, 0.5);
-            }
+        .class-cell {
+            background-color: white;
+            font-size: 1.2em;
+            font-weight: 500;
+        }
 
-            .modal-content {
-                background-color: white;
-                margin: 15% auto;
-                padding: 25px;
-                width: 300px;
-                border-radius: 8px;
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            }
+        .flying-lv0 {
+            color: #525252 !important;
+        }
 
-            .modal-content h2 {
-                margin-bottom: 20px;
-                font-weight: 600;
-                font-size: 1.2em;
-            }
+        .flying-lv05 {
+            color: #25b0ff !important;
+        }
 
-            select {
-                width: 100%;
-                padding: 10px;
-                margin: 10px 0;
-                border: 1px solid #ddd;
-                border-radius: 4px;
-                font-family: inherit;
-                font-size: 0.9em;
-            }
+        .flying-lv05-easy {
+            color: #55cdff !important;
+        }
 
-            .modal-buttons button {
-                padding: 8px 20px;
-                margin-left: 10px;
-                border: none;
-                border-radius: 4px;
-                background-color: #943a3a;
-                color: white;
-                cursor: pointer;
-                font-family: inherit;
-                font-weight: 500;
-            }
+        .flying-lv07 {
+            color: #5589ff !important;
+        }
 
-            .modal-buttons button:last-child {
-                background-color: #6b2929;
-            }
+        .flying-lv1 {
+            color: #ff5825 !important;
+        }
 
-            .class-cell {
-                cursor: pointer;
-            }
+        .low-flying {
+            color: #ff71df !important;
+        }
 
-            .class-cell {
-                color: #333333;
-            }
+        .kids-flying {
+            color: #ff9822 !important;
+        }
 
-            .save-button {
-                display: block;
-                width: 200px;
-                margin: 20px auto;
-                padding: 12px 0;
-                background-color: #943a3a;
-                color: white;
-                border: none;
-                border-radius: 4px;
-                font-family: inherit;
-                font-size: 1em;
-                font-weight: 500;
-                cursor: pointer;
-                transition: background-color 0.2s;
-            }
+        .therapy {
+            color: #ff71a3 !important;
+        }
 
-            .save-button:hover {
-                background-color: #6b2929;
-            }
+        .inside-flow {
+            color: #4ab851 !important;
+        }
 
-            .timetable-title {
-                text-align: center;
-                font-weight: 700;
-                font-size: 2em;
-                margin: 30px 0;
-                color: #222;
-            }
-        </style>
-    </head>
-    <body>
-        <div id="tableContainer">
-            <h1 class="timetable-title">요가디야 <span id="currentMonth"></span>월 시간표</h1>
-            <table>
-                <thead>
-                    <tr>
-                        <th>시간표 안내</th>
-                        <th>월</th>
-                        <th>화</th>
-                        <th>수</th>
-                        <th>목</th>
-                        <th>금</th>
-                        <th>토</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="time-column">am 9:30 ~ 10:20</td>
-                        <td class="class-cell flying-lv05">플라잉 Lv0.5</td>
-                        <td class="class-cell kids-flying">키즈플라잉</td>
-                        <td class="class-cell flying-lv0">플라잉 Lv0</td>
-                        <td class="class-cell therapy">도구테라피</td>
-                        <td class="class-cell flying-lv05-easy">플라잉 Lv0.5(쉬운)</td>
-                        <td class="class-cell low-flying">로우플라잉</td>
-                    </tr>
-                    <tr>
-                        <td class="time-column">am 10:30 ~ 11:20</td>
-                        <td class="class-cell flying-lv07">플라잉 Lv0.7</td>
-                        <td class="class-cell inside-flow">인사이드플로우</td>
-                        <td class="class-cell flying-lv1">플라잉 Lv1</td>
-                        <td class="class-cell healing">힐링빈야사</td>
-                        <td class="class-cell personal">개인레슨</td>
-                        <td class="class-cell instructor">지도자과정</td>
-                    </tr>
-                    <tr>
-                        <td class="time-column">pm 1:30 ~ 4:00</td>
-                        <td class="class-cell flying-lv05">플라잉 Lv0.5</td>
-                        <td class="class-cell flying-lv05">플라잉 Lv0.5</td>
-                        <td class="class-cell healing">힐링빈야사</td>
-                        <td class="class-cell healing">힐링빈야사</td>
-                        <td class="class-cell therapy">도구테라피</td>
-                        <td class="class-cell personal">개인레슨</td>
-                    </tr>
-                    <tr>
-                        <td class="time-column">pm 5:00 ~ 5:50</td>
-                        <td class="class-cell flying-lv1">플라잉 Lv1</td>
-                        <td class="class-cell low-flying">로우플라잉</td>
-                        <td class="class-cell flying-lv07">플라잉 Lv0.7</td>
-                        <td class="class-cell therapy">도구테라피</td>
-                        <td class="class-cell flying-lv05">플라잉 Lv0.5</td>
-                        <td class="class-cell personal">개인레슨</td>
-                    </tr>
-                    <tr>
-                        <td class="time-column">pm 7:10 ~ 8:00</td>
-                        <td class="class-cell flying-lv05-easy">플라잉 Lv0.5(쉬운)</td>
-                        <td class="class-cell inside-flow">인사이드플로우</td>
-                        <td class="class-cell flying-lv1">플라잉 Lv1</td>
-                        <td class="class-cell low-flying">로우플라잉</td>
-                        <td class="class-cell healing">힐링빈야사</td>
-                        <td class="class-cell empty-cell"></td>
-                    </tr>
-                    <tr>
-                        <td class="time-column">pm 8:10 ~ 9:00</td>
-                        <td class="class-cell flying-lv07">플라잉 Lv0.7</td>
-                        <td class="class-cell flying-lv0">플라잉 Lv0</td>
-                        <td class="class-cell flying-lv05">플라잉 Lv0.5</td>
-                        <td class="class-cell inside-flow">인사이드플로우</td>
-                        <td class="class-cell flying-lv1">플라잉 Lv1</td>
-                        <td class="class-cell empty-cell"></td>
-                    </tr>
-                    <tr>
-                        <td class="time-column">pm 9:20 ~ 10:10</td>
-                        <td class="class-cell flying-lv1">플라잉 Lv1</td>
-                        <td class="class-cell healing">힐링빈야사</td>
-                        <td class="class-cell flying-lv05-easy">플라잉 Lv0.5(쉬운)</td>
-                        <td class="class-cell flying-lv07">플라잉 Lv0.7</td>
-                        <td class="class-cell therapy">도구테라피</td>
-                        <td class="class-cell empty-cell"></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        .healing {
+            color: #0f7916 !important;
+        }
 
-        <button class="save-button" onclick="saveAsImage()">시간표 이미지로 저장</button>
+        .personal {
+            color: #ab82ff !important;
+        }
 
-        <div id="editModal" class="modal" style="display: none">
-            <div class="modal-content">
-                <h2>수업 정보 수정</h2>
-                <select id="classType">
-                    <option value="">수업 선택</option>
-                    <option value="flying-lv0">플라잉 Lv0</option>
-                    <option value="flying-lv05">플라잉 Lv0.5</option>
-                    <option value="flying-lv05-easy">플라잉 Lv0.5(쉬운)</option>
-                    <option value="flying-lv07">플라잉 Lv0.7</option>
-                    <option value="flying-lv1">플라잉 Lv1</option>
-                    <option value="low-flying">로우플라잉</option>
-                    <option value="kids-flying">키즈플라잉</option>
-                    <option value="therapy">도구테라피</option>
-                    <option value="inside-flow">인사이드플로우</option>
-                    <option value="healing">힐링빈야사</option>
-                    <option value="personal">개인레슨</option>
-                    <option value="instructor">지도자과정</option>
-                </select>
+        .instructor {
+            color: #ff5543 !important;
+        }
 
-                <select id="startTime">
-                    <option value="">시작 시간</option>
-                    <option value="00">정시</option>
-                    <option value="10">10분</option>
-                    <option value="20">20분</option>
-                    <option value="30">30분</option>
-                </select>
+        .empty-cell {
+            background-color: #fff;
+        }
 
-                <div class="modal-buttons">
-                    <button onclick="saveChanges()">저장</button>
-                    <button onclick="closeModal()">취소</button>
-                </div>
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 2vw 3vw;
+            width: 300px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-content h2 {
+            margin-bottom: 20px;
+            font-weight: 700;
+            font-size: 1.2em;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 0.9em;
+        }
+
+        .modal-buttons button {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 4px;
+            background-color: #093280;
+            color: white;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 500;
+        }
+
+        .modal-buttons button:last-child {
+            background-color: #747474;
+        }
+
+        .class-cell {
+            cursor: pointer;
+        }
+
+        .class-cell {
+            color: #333333;
+        }
+
+        .save-button {
+            display: block;
+            width: 200px;
+            margin: 40px 0 0 auto;
+            padding: 15px 0;
+            background-color: #292929;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 1em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .save-button:hover {
+            background-color: #111;
+        }
+
+        .timetable-title {
+            display: flex;
+            justify-content: center;
+            align-items: baseline;
+            gap: 1em;
+            margin: 30px 0;
+            color: #fff;
+        }
+
+        .timetable-title em {
+            font-weight: 500;
+            font-style: normal;
+            font-size: 1em;
+        }
+
+        .timetable-title strong {
+            font-weight: 800;
+            font-size: 1.8em;
+        }
+
+        .sns-link {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            margin-top: 30px;
+        }
+
+        .sns-link a {
+            height: 40px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: #fff;
+            font-size: 24px;
+        }
+
+        .sns-link a img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="tableContainer">
+        <h1 class="timetable-title">
+            <em>플라잉요가디야</em>
+            <strong>010.2442.0364</strong>
+            <em><span id="currentMonth"></span>월 시간표</em>
+        </h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>시간표 안내</th>
+                    <th>월</th>
+                    <th>화</th>
+                    <th>수</th>
+                    <th>목</th>
+                    <th>금</th>
+                    <th>토</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="time-column">am 9:30 ~ 10:20</td>
+                    <td class="class-cell flying-lv05">플라잉 Lv0.5</td>
+                    <td class="class-cell kids-flying">키즈플라잉</td>
+                    <td class="class-cell flying-lv0">플라잉 Lv0</td>
+                    <td class="class-cell therapy">도구테라피</td>
+                    <td class="class-cell flying-lv05-easy">플라잉 Lv0.5(쉬운)</td>
+                    <td class="class-cell low-flying">로우플라잉</td>
+                </tr>
+                <tr>
+                    <td class="time-column">am 10:30 ~ 11:20</td>
+                    <td class="class-cell flying-lv07">플라잉 Lv0.7</td>
+                    <td class="class-cell inside-flow">인사이드플로우</td>
+                    <td class="class-cell flying-lv1">플라잉 Lv1</td>
+                    <td class="class-cell healing">힐링빈야사</td>
+                    <td class="class-cell personal">개인레슨</td>
+                    <td class="class-cell instructor">지도자과정</td>
+                </tr>
+                <tr>
+                    <td class="time-column">pm 1:30 ~ 4:00</td>
+                    <td class="class-cell flying-lv05">플라잉 Lv0.5</td>
+                    <td class="class-cell flying-lv05">플라잉 Lv0.5</td>
+                    <td class="class-cell healing">힐링빈야사</td>
+                    <td class="class-cell healing">힐링빈야사</td>
+                    <td class="class-cell therapy">도구테라피</td>
+                    <td class="class-cell personal">개인레슨</td>
+                </tr>
+                <tr>
+                    <td class="time-column">pm 5:00 ~ 5:50</td>
+                    <td class="class-cell flying-lv1">플라잉 Lv1</td>
+                    <td class="class-cell low-flying">로우플라잉</td>
+                    <td class="class-cell flying-lv07">플라잉 Lv0.7</td>
+                    <td class="class-cell therapy">도구테라피</td>
+                    <td class="class-cell flying-lv05">플라잉 Lv0.5</td>
+                    <td class="class-cell personal">개인레슨</td>
+                </tr>
+                <tr>
+                    <td class="time-column">pm 7:10 ~ 8:00</td>
+                    <td class="class-cell flying-lv05-easy">플라잉 Lv0.5(쉬운)</td>
+                    <td class="class-cell inside-flow">인사이드플로우</td>
+                    <td class="class-cell flying-lv1">플라잉 Lv1</td>
+                    <td class="class-cell low-flying">로우플라잉</td>
+                    <td class="class-cell healing">힐링빈야사</td>
+                    <td class="class-cell empty-cell"></td>
+                </tr>
+                <tr>
+                    <td class="time-column">pm 8:10 ~ 9:00</td>
+                    <td class="class-cell flying-lv07">플라잉 Lv0.7</td>
+                    <td class="class-cell flying-lv0">플라잉 Lv0</td>
+                    <td class="class-cell flying-lv05">플라잉 Lv0.5</td>
+                    <td class="class-cell inside-flow">인사이드플로우</td>
+                    <td class="class-cell flying-lv1">플라잉 Lv1</td>
+                    <td class="class-cell empty-cell"></td>
+                </tr>
+                <tr>
+                    <td class="time-column">pm 9:20 ~ 10:10</td>
+                    <td class="class-cell flying-lv1">플라잉 Lv1</td>
+                    <td class="class-cell healing">힐링빈야사</td>
+                    <td class="class-cell flying-lv05-easy">플라잉 Lv0.5(쉬운)</td>
+                    <td class="class-cell flying-lv07">플라잉 Lv0.7</td>
+                    <td class="class-cell therapy">도구테라피</td>
+                    <td class="class-cell empty-cell"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="sns-link">
+        <a href="https://www.instagram.com/yoga_diya" target="_blank">
+            <img src='./img/ico-instagram.webp' alt="Instagram">
+            <b>yoga_diya</b>
+        </a>
+
+        <a href="https://blog.naver.com/yoga_diya" target="_blank">
+            <img src="./img/ico-blog.svg" alt="요가디야 블로그">
+            <b>yoga_diya</b>
+        </a>
+    </div>
+
+    <button class="save-button" onclick="saveAsImage()">시간표 이미지로 저장</button>
+
+    <div id="editModal" class="modal" style="display: none">
+        <div class="modal-content">
+            <h2>수업 정보 수정</h2>
+            <select id="classType">
+                <option value="">수업 선택</option>
+                <option value="none">수업 없음</option>
+                <option value="flying-lv0">플라잉 Lv0</option>
+                <option value="flying-lv05">플라잉 Lv0.5</option>
+                <option value="flying-lv05-easy">플라잉 Lv0.5(쉬운)</option>
+                <option value="flying-lv07">플라잉 Lv0.7</option>
+                <option value="flying-lv1">플라잉 Lv1</option>
+                <option value="low-flying">로우플라잉</option>
+                <option value="kids-flying">키즈플라잉</option>
+                <option value="therapy">도구테라피</option>
+                <option value="inside-flow">인사이드플로우</option>
+                <option value="healing">힐링빈야사</option>
+                <option value="personal">개인레슨</option>
+                <option value="instructor">지도자과정</option>
+            </select>
+
+            <select id="startHour">
+                <option value="">시작 시간</option>
+                <option value="06">오전 6시</option>
+                <option value="07">오전 7시</option>
+                <option value="08">오전 8시</option>
+                <option value="09">오전 9시</option>
+                <option value="10">오전 10시</option>
+                <option value="11">오전 11시</option>
+                <option value="12">오후 12시</option>
+                <option value="13">오후 1시</option>
+                <option value="14">오후 2시</option>
+                <option value="15">오후 3시</option>
+                <option value="16">오후 4시</option>
+                <option value="17">오후 5시</option>
+                <option value="18">오후 6시</option>
+                <option value="19">오후 7시</option>
+                <option value="20">오후 8시</option>
+                <option value="21">오후 9시</option>
+                <option value="22">오후 10시</option>
+                <option value="23">오후 11시</option>
+                <option value="00">오전 12시</option>
+            </select>
+
+            <select id="startMinute">
+                <option value="">시작 분</option>
+                <option value="00">00분</option>
+                <option value="10">10분</option>
+                <option value="20">20분</option>
+                <option value="30">30분</option>
+                <option value="40">40분</option>
+                <option value="50">50분</option>
+            </select>
+
+            <div class="modal-buttons">
+                <button onclick="saveChanges()">저장</button>
+                <button onclick="closeModal()">취소</button>
             </div>
         </div>
+    </div>
 
-        <script>
-            let currentCell = null;
-            const classNames = {
-                'flying-lv0': '플라잉 Lv0',
-                'flying-lv05': '플라잉 Lv0.5',
-                'flying-lv05-easy': '플라잉 Lv0.5(쉬운)',
-                'flying-lv07': '플라잉 Lv0.7',
-                'flying-lv1': '플라잉 Lv1',
-                'low-flying': '로우플라잉',
-                'kids-flying': '키즈플라잉',
-                therapy: '도구테라피',
-                'inside-flow': '인사이드플로우',
-                healing: '힐링빈야사',
-                personal: '개인레슨',
-                instructor: '지도자과정',
-            };
+    <script>
+        let currentCell = null;
+        const classNames = {
+            'flying-lv0': '플라잉 Lv0',
+            'flying-lv05': '플라잉 Lv0.5',
+            'flying-lv05-easy': '플라잉 Lv0.5(쉬운)',
+            'flying-lv07': '플라잉 Lv0.7',
+            'flying-lv1': '플라잉 Lv1',
+            'low-flying': '로우플라잉',
+            'kids-flying': '키즈플라잉',
+            therapy: '도구테라피',
+            'inside-flow': '인사이드플로우',
+            healing: '힐링빈야사',
+            personal: '개인레슨',
+            instructor: '지도자과정',
+        };
 
-            // 셀 클릭 이벤트 리스너 추가
+        // 셀 클릭 이벤트 리스너 추가
+        document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('.class-cell').forEach((cell) => {
                 cell.addEventListener('click', function () {
                     currentCell = this;
                     openModal();
                 });
             });
+        });
 
-            function openModal() {
-                const modal = document.getElementById('editModal');
-                const classType = document.getElementById('classType');
-                const startTime = document.getElementById('startTime');
+        function openModal() {
+            const modal = document.getElementById('editModal');
+            const classType = document.getElementById('classType');
+            const startHour = document.getElementById('startHour');
+            const startMinute = document.getElementById('startMinute');
 
-                // 현재 셀의 클래스와 시간 정보를 모달에 설정
-                if (currentCell) {
-                    // 클래스 타입 설정
-                    for (const [value, className] of Object.entries(classNames)) {
-                        if (currentCell.classList.contains(value)) {
-                            classType.value = value;
-                            break;
-                        }
-                    }
-
-                    // 시작 시간 설정
-                    const timeMatch = currentCell.textContent.match(/\((\d{2}):00\)/);
-                    if (timeMatch) {
-                        startTime.value = timeMatch[1];
-                    } else {
-                        startTime.value = '00';
+            // 현재 셀의 클래스와 시간 정보를 모달에 설정
+            if (currentCell) {
+                // 클래스 타입 설정
+                for (const [value, className] of Object.entries(classNames)) {
+                    if (currentCell.classList.contains(value)) {
+                        classType.value = value;
+                        break;
                     }
                 }
 
-                modal.style.display = 'block';
-            }
+                // 시작 시간 설정
+                const timeMatch = currentCell.textContent.match(/\((\d+):(\d+)\s*(am|pm)\)/i);
+                if (timeMatch) {
+                    let hour = parseInt(timeMatch[1]);
+                    const minute = timeMatch[2];
+                    const period = timeMatch[3].toLowerCase();
 
-            function closeModal() {
-                document.getElementById('editModal').style.display = 'none';
-                currentCell = null;
-            }
+                    if (period === 'pm' && hour < 12) hour += 12;
+                    if (period === 'am' && hour === 12) hour = 0;
 
-            function saveChanges() {
-                if (!currentCell) return;
-
-                const classType = document.getElementById('classType').value;
-                const startTime = document.getElementById('startTime').value;
-
-                // 기존 클래스 제거
-                Object.keys(classNames).forEach((className) => {
-                    currentCell.classList.remove(className);
-                });
-                currentCell.classList.remove('empty-cell'); // empty-cell 클래스도 제거
-
-                // 새로운 클래스 추가
-                if (classType) {
-                    currentCell.classList.add(classType);
-                    let displayText = classNames[classType];
-
-                    // 현재 셀의 시간대 가져오기
-                    const timeColumn = currentCell.closest('tr').querySelector('.time-column').textContent;
-                    const baseTime = timeColumn.match(/[ap]m\s+(\d+):(\d+)/i);
-
-                    if (baseTime && startTime !== '00') {
-                        let hour = parseInt(baseTime[1]);
-                        const isPM = timeColumn.toLowerCase().includes('pm');
-
-                        if (isPM && hour < 12) hour += 12;
-                        if (!isPM && hour === 12) hour = 0;
-
-                        const formattedHour = hour.toString().padStart(2, '0');
-                        displayText = `(${formattedHour}:${startTime})${displayText}`;
-                    }
-
-                    currentCell.textContent = displayText;
+                    startHour.value = hour.toString().padStart(2, '0');
+                    startMinute.value = minute;
                 } else {
-                    currentCell.textContent = '';
-                    currentCell.classList.add('empty-cell');
+                    startHour.value = '';
+                    startMinute.value = '';
+                }
+            }
+
+            modal.style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('editModal').style.display = 'none';
+            currentCell = null;
+        }
+
+        function saveChanges() {
+            if (!currentCell) return;
+
+            const classType = document.getElementById('classType').value;
+            const startHour = document.getElementById('startHour').value;
+            const startMinute = document.getElementById('startMinute').value;
+
+            // 기존 클래스 제거
+            Object.keys(classNames).forEach((className) => {
+                currentCell.classList.remove(className);
+            });
+            currentCell.classList.remove('empty-cell'); // empty-cell 클래스도 제거
+
+            // 새로운 클래스 추가
+            let displayText = '';
+            if (classType && classType !== 'none') {
+                currentCell.classList.add(classType);
+                displayText = classNames[classType];
+
+                // 시간과 분을 설정
+                if (startHour && startMinute) {
+                    const hour = parseInt(startHour);
+                    const period = hour >= 12 ? 'pm' : 'am';
+                    const formattedHour = hour > 12 ? hour - 12 : hour;
+                    displayText = `(${formattedHour}:${startMinute} ${period}) ${displayText}`;
                 }
 
-                closeModal();
+                currentCell.textContent = displayText;
+            } else {
+                currentCell.textContent = '';
+                currentCell.classList.add('empty-cell');
             }
 
-            // 이미지 저장 함수 추가
-            function saveAsImage() {
-                const tableContainer = document.getElementById('tableContainer');
+            // 변경 사항 저장
+            saveToLocalStorage();
 
-                html2canvas(tableContainer, {
-                    backgroundColor: '#ffffff',
-                    scale: 2,
-                    useCORS: true,
-                }).then(function (canvas) {
-                    const image = canvas.toDataURL('image/png');
-                    const link = document.createElement('a');
-                    link.download = `요가디야_${document.getElementById('currentMonth').textContent}월_시간표.png`;
-                    link.href = image;
-                    link.click();
-                });
-            }
+            closeModal();
+        }
 
-            // 현재 월을 표시하는 함수
-            function setCurrentMonth() {
-                const currentMonth = new Date().getMonth() + 1; // getMonth()는 0부터 시작하므로 1을 더함
-                document.getElementById('currentMonth').textContent = currentMonth;
-            }
+        function saveToLocalStorage() {
+            const timetableData = {};
+            document.querySelectorAll('.class-cell').forEach((cell, index) => {
+                timetableData[index] = {
+                    classType: cell.className.replace('class-cell ', '').trim(),
+                    textContent: cell.textContent
+                };
+            });
+            localStorage.setItem('timetableData', JSON.stringify(timetableData));
+        }
 
-            // 페이지 로드 시 현재 월 표시
-            setCurrentMonth();
-        </script>
-    </body>
+        // 이미지 저장 함수 추가
+        function saveAsImage() {
+            const container = document.createElement('div');
+            container.style.backgroundColor = '#faa9ac';
+            container.style.padding = '20px 20px 40px';
+            container.style.position = 'fixed';
+            container.style.top = '-10000px';
+            container.appendChild(document.getElementById('tableContainer').cloneNode(true));
+            container.appendChild(document.querySelector('.sns-link').cloneNode(true));
+            document.body.appendChild(container);
+
+            html2canvas(container, {
+                backgroundColor: '#faa9ac',
+                scale: 2,
+                useCORS: true,
+            }).then(function (canvas) {
+                const image = canvas.toDataURL('image/png');
+                const link = document.createElement('a');
+                link.download = `요가디야_${document.getElementById('currentMonth').textContent}월_시간표.png`;
+                link.href = image;
+                link.click();
+                document.body.removeChild(container);
+            });
+        }
+
+        // 현재 월을 표시하는 함수
+        function setCurrentMonth() {
+            const currentMonth = new Date().getMonth() + 1; // getMonth()는 0부터 시작하므로 1을 더함
+            document.getElementById('currentMonth').textContent = currentMonth;
+        }
+
+        // 페이지 로드 시 현재 월 표시
+        setCurrentMonth();
+
+        // 페이지 로드 시 저장된 데이터 불러오기
+        document.addEventListener('DOMContentLoaded', loadSavedData);
+
+        function loadSavedData() {
+            const savedData = JSON.parse(localStorage.getItem('timetableData')) || {};
+            document.querySelectorAll('.class-cell').forEach((cell, index) => {
+                const savedClass = savedData[index];
+                if (savedClass) {
+                    cell.className = `class-cell ${savedClass.classType}`;
+                    cell.textContent = savedClass.textContent;
+                }
+            });
+        }
+    </script>
+</body>
+
 </html>
